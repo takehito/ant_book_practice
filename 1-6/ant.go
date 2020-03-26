@@ -27,7 +27,7 @@ func antWalkMin(l int, ants []int) int {
 		minTime = math.Min(minTime, math.Abs(float64(absAnt)))
 	}
 
-	return l/2 - int(minTime)
+	return l/2 - int(minTime) - 1
 }
 
 func antWalkMax(l int, ants []int) int {
@@ -53,5 +53,5 @@ func antWalkMax(l int, ants []int) int {
 		maxAnt = math.Max(maxAnt, math.Abs(float64(absAnt)))
 	}
 
-	return int(maxAnt) + 1
+	return int(maxAnt)
 }
