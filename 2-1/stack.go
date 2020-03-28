@@ -1,21 +1,33 @@
 package main
 
 type stack struct {
-	previous *stack
-	current  *stack
-	value    int
+	size     int
+	value    []int
+	location int
+}
+
+func newStack(n int) *stack {
+	return &stack{
+		size:  n,
+		value: make([]int, n),
+	}
 }
 
 func (s *stack) push(n int) {
-	s.previous = s.current
-	s.current = &stack{value: n, previous: s.current}
+	if s.location == s.size-1 {
+		return
+	}
+	s.value[s.location] = n
+	s.location++
 }
 
 func (s *stack) pop() {
-	s.current = s.previous
-	s.previous = s.previous.previous
+	if s.location == 0 {
+		return
+	}
+	s.location--
 }
 
 func (s *stack) top() int {
-	return s.current.value
+	return s.value[s.location]
 }
