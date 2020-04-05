@@ -8,7 +8,7 @@ func TestUnlimitedNapsack(t *testing.T) {
 		napsack{weight: 4, value: 5},
 		napsack{weight: 2, value: 3},
 	}
-	if got := napsacks(n).unlimitedNapsack(); got != 10 {
+	if got := napsacks(n).unlimitedNapsack(7); got != 10 {
 		t.Errorf("%d\n", got)
 	}
 }

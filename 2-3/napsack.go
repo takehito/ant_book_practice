@@ -30,19 +30,26 @@ func maxValue(n []napsack, memos []napsack, i int, maxWeight int) int {
 
 type napsacks []napsack
 
-func (n napsacks) unlimitedNapsack() int {
+func (n napsacks) initDP(maxWeight int) [][]int {
 	dp := make([][]int, len(n)+1)
 	for i := 0; i < len(dp); i++ {
-		dp[i] = make([]int, len(n)+1)
+		dp[i] = make([]int, maxWeight+1)
 	}
+	return dp
+}
+
+func (n napsacks) unlimitedNapsack(maxWeight int) int {
+	dp := n.initDP(maxWeight)
 
 	for i := 0; i < len(n); i++ {
-		for j := 0; j < len(n); j++ {
-			for k := 0; k*n[i].weight <= j; k++ {
-				dp[i+1][j] = int(math.Max(float64(dp[i+1][j]), float64(dp[i][j-k*n[i].weight]+n[i].value)))
+		for j := 0; j <= maxWeight; j++ {
+			if j < n[i].weight {
+				dp[i+1][j] = dp[i][j]
+			} else {
+				dp[i+1][j] = int(math.Max(float64(dp[i][j]), float64(dp[i][j-n[i].weight]+n[i].value)))
 			}
 		}
 	}
 
-	return dp[len(n)][len(n)]
+	return dp[len(n)][maxWeight]
 }
