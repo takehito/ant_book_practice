@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 type napsack struct {
 	weight int
@@ -46,10 +48,34 @@ func (n napsacks) unlimitedNapsack(maxWeight int) int {
 			if j < n[i].weight {
 				dp[i+1][j] = dp[i][j]
 			} else {
-				dp[i+1][j] = int(math.Max(float64(dp[i][j]), float64(dp[i][j-n[i].weight]+n[i].value)))
+				a := dp[i][j]
+				b := dp[i+1][j-n[i].weight] + n[i].value
+				dp[i+1][j] = int(math.Max(float64(a), float64(b)))
 			}
 		}
 	}
 
 	return dp[len(n)][maxWeight]
+}
+
+func (n napsacks) napsack01(maxWeight int) int {
+	dp := make([]int, maxWeight+1)
+	for i := 0; i < len(n); i++ {
+		for j := maxWeight; j >= n[i].weight; j-- {
+			update := dp[j-n[i].weight] + n[i].value
+			dp[j] = int(math.Max(float64(dp[j]), float64(update)))
+		}
+	}
+	return dp[maxWeight]
+}
+
+func (n napsacks) unlimitedNapsackFixed(maxWeight int) int {
+	dp := make([]int, maxWeight+1)
+	for i := 0; i < len(n); i++ {
+		for j := n[i].weight; j <= maxWeight; j++ {
+			update := dp[j-n[i].weight] + n[i].value
+			dp[j] = int(math.Max(float64(dp[j]), float64(update)))
+		}
+	}
+	return dp[maxWeight]
 }
