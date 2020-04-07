@@ -33,11 +33,7 @@ func maxValue(n []napsack, memos []napsack, i int, maxWeight int) int {
 type napsacks []napsack
 
 func (n napsacks) initDP(maxWeight int) [][]int {
-	dp := make([][]int, len(n)+1)
-	for i := 0; i < len(dp); i++ {
-		dp[i] = make([]int, maxWeight+1)
-	}
-	return dp
+	return initDP(len(n)+1, maxWeight+1)
 }
 
 func (n napsacks) unlimitedNapsack(maxWeight int) int {
@@ -78,4 +74,54 @@ func (n napsacks) unlimitedNapsackFixed(maxWeight int) int {
 		}
 	}
 	return dp[maxWeight]
+}
+
+func initDP(a, b int) [][]int {
+	dp := make([][]int, a)
+	for i := 0; i < len(dp); i++ {
+		dp[i] = make([]int, b)
+	}
+	return dp
+}
+
+func (n napsacks) getMaxValue() int {
+	var maxValue int
+	for _, nn := range n {
+		maxValue = int(math.Max(float64(maxValue), float64(nn.value)))
+	}
+	return maxValue
+}
+
+func fill(dp [][]int, a int, filled int) [][]int {
+	for i := 0; i < len(dp[a]); i++ {
+		dp[a][i] = filled
+	}
+	return dp
+}
+
+func (n napsacks) napsack02(maxWeight int) int {
+	maxValue := n.getMaxValue()
+	dp := initDP(len(n)+1, len(n)*maxValue+1)
+
+	const INF = math.MaxInt32
+	dp = fill(dp, 0, INF)
+	dp[0][0] = 0
+	for i := 0; i < len(n); i++ {
+		for j := 0; j < len(n)*maxValue; j++ {
+			if j < n[i].value {
+				dp[i+1][j] = dp[i][j]
+			} else {
+				dp[i+1][j] = int(math.Min(float64(dp[i][j]), float64(dp[i][j-n[i].value]+n[i].weight)))
+			}
+		}
+	}
+
+	var res int
+	for i := 0; i < len(n)*maxValue; i++ {
+		if dp[len(n)][i] <= maxWeight {
+			res = i
+		}
+	}
+
+	return res
 }
