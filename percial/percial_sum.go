@@ -1,4 +1,4 @@
-package main
+package percial
 
 type am struct {
 	a int

@@ -1,4 +1,4 @@
-package main
+package fence
 
 func fenceRepair(l []int) int {
 	var cost int
