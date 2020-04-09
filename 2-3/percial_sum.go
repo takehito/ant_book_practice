@@ -24,3 +24,25 @@ func (n ams) percialSum(want int) bool {
 
 	return dp[len(n)][want]
 }
+
+func (n ams) newPercialSum(want int) bool {
+	dp := make([]int, want+1)
+	for i := 0; i < len(dp); i++ {
+		dp[i] = -1
+	}
+	dp[0] = 0
+
+	for i := 0; i < len(n); i++ {
+		for j := 0; j <= want; j++ {
+			switch {
+			case dp[j] >= 0:
+				dp[j] = n[i].m
+			case j < n[i].a || dp[j-n[i].a] <= 0:
+				dp[j] = -1
+			default:
+				dp[j] = dp[j-n[i].a] - 1
+			}
+		}
+	}
+	return dp[want] >= 0
+}
